@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLogAnalyticsWorkspaceName": {
+      "value": "log-westus2-hub"
+    },
+    "parLogAnalyticsWorkspaceLocation": {
+      "value": "westus2"
+    },
+    "parLogAnalyticsWorkspaceSkuName": {
+      "value": "PerGB2018"
+    },
+    "parLogAnalyticsWorkspaceLogRetentionInDays": {
+      "value": 90
+    },
+    "parLogAnalyticsWorkspaceSolutions": {
+      "value": [
+        "AgentHealthAssessment",
+        "AntiMalware",
+        "ChangeTracking",
+        "Security",
+        "SecurityInsights",
+        "SQLAdvancedThreatProtection",
+        "SQLVulnerabilityAssessment",
+        "SQLAssessment",
+        "Updates",
+        "VMInsights"
+      ]
+    },
+    "parAutomationAccountName": {
+      "value": "aa-westus2-hub"
+    },
+    "parAutomationAccountLocation": {
+      "value": "westus2"
+    },
+    "parAutomationAccountUseManagedIdentity": {
+      "value": true
+    },
+    "parTags": {
+      "value": {
+        "Environment": "Lab",
+        "Business Unit": "Cloud Enablement",
+        "Expiry Date": "5/31/2023",
+        "Owner": "Joe Thompson",
+        "DeployedBy": "Lunavi"
+      }
+    },
+    "parTelemetryOptOut": {
+      "value": false
+    }
+  }
+}
