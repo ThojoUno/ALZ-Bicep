@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLocation": {
+      "value": "westus2"
+    },
+    "parDomainControllers":{
+      "value": [
+        {
+          "enableVm": true,
+          "vmName": "AZWUS2DC01",
+          "vmSize": "Standard_D2s_v5",
+          "availabilityZone": 1,
+          "subnetName": "snet-identity-hub",
+          "enableDiagnostics": true,
+          "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2022-datacenter-azure-edition",
+              "version": "latest"
+          },
+          "osDisk": {
+              "createOption": "fromImage",
+              "deleteOption": "Delete",
+              "diskSizeGB": 128,
+              "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+              }
+          },
+          "nicConfig": {
+              "deleteOption": "Delete",
+              "enableAcceleratedNetworking": true
+          },
+          "osType": "Windows",
+          "adminUser": "azadminuser",
+          "adminPassword": "P@ssword1234",
+          "configurationProfile": "/providers/Microsoft.Automanage/bestPractices/AzureBestPracticesProduction",
+          "licenseType": "",
+          "dataDisks": [
+              {
+                  "caching": "ReadOnly",
+                  "createOption": "Empty",
+                  "deleteOption": "Delete",
+                  "diskSizeGB": "32",
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                  }
+              }
+          ]
+      },
+      {
+          "enableVm": true,
+          "vmName": "AZWUS2DC02",
+          "vmSize": "Standard_D2s_v5",
+          "availabilityZone": 3,
+          "subnetName": "snet-identity-hub",
+          "enableDiagnostics": true,
+          "imageReference": {
+              "publisher": "MicrosoftWindowsServer",
+              "offer": "WindowsServer",
+              "sku": "2022-datacenter-azure-edition",
+              "version": "latest"
+          },
+          "osDisk": {
+              "createOption": "fromImage",
+              "deleteOption": "Delete",
+              "diskSizeGB": 128,
+              "managedDisk": {
+                  "storageAccountType": "StandardSSD_LRS"
+              }
+          },
+          "nicConfig": {
+              "deleteOption": "Delete",
+              "enableAcceleratedNetworking": true
+          },
+          "osType": "Windows",
+          "adminUser": "azadminuser",
+          "adminPassword": "P@ssword1234",
+          "configurationProfile": "/providers/Microsoft.Automanage/bestPractices/AzureBestPracticesProduction",
+          "licenseType": "",
+          "dataDisks": [
+              {
+                  "caching": "ReadOnly",
+                  "createOption": "Empty",
+                  "deleteOption": "Delete",
+                  "diskSizeGB": "32",
+                  "managedDisk": {
+                      "storageAccountType": "Standard_LRS"
+                  }
+              }
+          ]
+      }
+
+      ]
+    },
+    "parRecoveryServicesVault":{
+      "value": {
+        "enableVault": true,
+        "storageModelType": "GeoRedundant",
+        "crossRegionRestoreFlag": true
+
+      }
+    },
+    "parAzKeyVault":{
+      "value": {
+        "enableKeyVault": true
+      }
+    },
+    "parTags": {
+      "value": {
+        "Environment": "Live"
+      }
+    }
+  }
+}
