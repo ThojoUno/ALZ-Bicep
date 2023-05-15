@@ -263,7 +263,3 @@ Register-AzResourceProvider -ProviderNamespace Microsoft.Compute
 
 New-AzResourceGroupDeployment @hubIdentityObject
 
-
-
-
-parLogAnalyticsWorkspaceResourceId = $LogAnalyticsWorkspaceId

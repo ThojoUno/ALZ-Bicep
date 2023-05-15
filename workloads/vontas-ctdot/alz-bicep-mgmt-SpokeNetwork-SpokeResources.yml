@@ -1,0 +1,124 @@
+# customized for Vontas CTDOT CTrail project
+# 2023/04/17, JThompson
+
+name: mgmt-SpokeNetwork-spokeResources
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "CE-vontas-cloud-ctdot-connection"
+  ManagementGroupPrefix: "vch"
+  TopLevelManagementGroupDisplayName: "Vontas Cloud Hosting"
+  SpokeManagementGroupId: "vch-ctdotctrail"
+  CustomerPath: "vontas-ctdot-ctrail"
+  Location: "centralus"
+  LocationShort: "cus"
+  SpokeEnvironmentSuffix: "ctrail-prod"
+  SpokeSubscriptionId: "86c1e9d8-ab08-4a11-b32d-a9d2e82695a1"
+  ManagementResourceGroupName: "rg-$(Location)-mgmt-$(SpokeEnvironmentSuffix)"
+  LogAnalyticsWorkspaceName: "log-$(Location)-mgmt-$(SpokeEnvironmentSuffix)"
+  AutomationAccountName: "aa-$(Location)-mgmt-$(SpokeEnvironmentSuffix)"
+  AutomationAccountLocation: "centralus"
+  RecoveryServicesVaultName: "rsv-$(Location)-mgmt-$(SpokeEnvironmentSuffix)"
+  AzureKeyVaultName: "kv-$(LocationShort)-mgmt-$(SpokeEnvironmentSuffix)"
+  SpokeNetworkResourceGroupName: "rg-$(Location)-network-$(SpokeEnvironmentSuffix)"
+  SpokeNetworkName: "vnet-$(Location)-$(SpokeEnvironmentSuffix)"
+  FirewallNextHopIpAddress: "10.222.0.68"
+  RunNumber: $(Build.BuildNumber)
+
+jobs:
+- job:
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Management Resource Group
+    name: create_logging_rg
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeSubscriptionId)
+        az deployment sub create \
+        --template-file infra-as-code/bicep/modules/resourceGroup/resourceGroup.bicep \
+        --parameters parResourceGroupName=$(ManagementResourceGroupName) \
+        --location $(Location) \
+        --name create_management_rg-$(RunNumber)
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Management-Logging
+    name: create_logging
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeSubscriptionId)
+        az deployment group create --what-if --verbose \
+        --resource-group $(ManagementResourceGroupName) \
+        --template-file infra-as-code/bicep/modules/management/management.lunavi.bicep \
+        --parameters @infra-as-code/bicep/modules/management/parameters/management.lunavi.parameters.json \
+        --parameters parLocation=$(Location) \
+        --parameters parLogAnalyticsWorkspaceName=$(LogAnalyticsWorkspaceName) \
+        --parameters parAzureKeyVaultName=$(AzureKeyVaultName) \
+        --parameters parRecoveryServicesVaultName=$(RecoveryServicesVaultName) \
+        --name create_mgmt_logging-$(RunNumber)
+
+# removing automation account from deployment (if parameter doesn't exist, it isn't deployed)
+# getting error "PublicNetworkAccess parameter is invalid
+# parAutomationAccountName=$(AutomationAccountName) parAutomationAccountLocation=$(AutomationAccountLocation)
+
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Spoke Network Resource Group
+    name: create_spoke_network_rg
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeSubscriptionId)
+        az deployment sub create \
+        --template-file infra-as-code/bicep/modules/resourceGroup/resourceGroup.bicep \
+        --parameters parResourceGroupName=$(SpokeNetworkResourceGroupName) \
+        --location $(Location) \
+        --name create_spoke_network_rg-$(RunNumber)
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Spoke Network
+    name: create_spoke_network
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeSubscriptionId)
+        az deployment group create --verbose \
+        --resource-group $(SpokeNetworkResourceGroupName) \
+        --template-file infra-as-code/bicep/modules/spokeNetworking/spokeNetworking-v2.lunavi.bicep \
+        --parameters @deploy/$(CustomerPath)/spokeNetworking.parameters.all.json \
+        --parameters parLocation=$(Location) parSpokeNetworkName=$(SpokeNetworkName) \
+        --parameters parNextHopIpAddress=$(FirewallNextHopIpAddress) \
+        --name create_spoke_network-$(RunNumber)
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Spoke Resources
+    name: create_spoke_resources
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeSubscriptionId)
+        az deployment sub create --verbose \
+        --location $(Location) \
+        --template-file infra-as-code/bicep/modules/spokeResources/spokeResources.lunavi.bicep \
+        --parameters @deploy/$(CustomerPath)/spokeResources.parameters.all.json \
+        --parameters parSpokeNetworkName=$(SpokeNetworkName) \
+        --parameters parSpokeNetworkResourceGroupName=$(SpokeNetworkResourceGroupName) \
+        --parameters parRecoveryServicesVaultName=$(RecoveryServicesVaultName) parRecoveryServicesResourceGroupName=$(ManagementResourceGroupName) \
+        --name create_spoke_resources-$(RunNumber)
+
+

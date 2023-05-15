@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parDisableBgpRoutePropagation": {
+      "value": false
+    },
+    "parDdosProtectionPlanId": {
+      "value": ""
+    },
+    "parSpokeNetworkAddressPrefix": {
+      "value": "10.222.3.0/24"
+    },
+    "parSpokeNetworkName": {
+      "value": "vnet-centralus-ctrail-prod"
+    },
+    "parSubnets": {
+      "value": [
+        {
+          "name": "snet-centralus-onboard-ctrail-prod",
+          "nsgName": "nsg-centralus-onboard-ctrail-prod",
+          "ipAddressRange": "10.222.3.64/27",
+          "enableNsg": true,
+          "enableRouteTable": true,
+          "delegations": [],
+          "nsgSecurityRules": []
+        },
+        {
+          "name": "snet-centralus-mgmt-ctrail-prod",
+          "nsgName": "nsg-centralus-mgmt-ctrail-prod",
+          "ipAddressRange": "10.222.3.192/27",
+          "enableNsg": true,
+          "enableRouteTable": true,
+          "delegations": [],
+          "nsgSecurityRules": []
+        },
+        {
+          "name": "snet-centralus-sqlmi-ctrail-prod",
+          "nsgName": "",
+          "ipAddressRange": "10.222.3.160/27",
+          "enableNsg": false,
+          "enableRouteTable": false,
+          "delegations": {
+              "name": "managedInstanceDelegation",
+              "serviceName": "Microsoft.Sql/managedInstances"
+          },
+          "nsgSecurityRules": []
+        }
+      ]
+    },
+    "parDnsServerIps": {
+      "value": []
+    },
+    "parSpokeToHubRouteTableName": {
+      "value": "route-centralus-ctrail-prod"
+    },
+    "parTags": {
+      "value": {
+        "Application": "CTDOT - CTrail",
+        "Environment": "prod",
+        "DeployedBy": "Lunavi"
+      }
+    },
+    "parTelemetryOptOut": {
+      "value": false
+    }
+  }
+}

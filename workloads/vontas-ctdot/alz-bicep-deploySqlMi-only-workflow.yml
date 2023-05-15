@@ -1,0 +1,37 @@
+# customized for Vontas, CTDOT - CTrail project
+# 2023-04-16, JThompson
+name: spoke-resource-sqlmi
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  ServiceConnectionName: "CE-vontas-cloud-ctdot-connection"
+  Location: "centralus"
+  SpokeEnvironmentSuffix: "ctrail-prod"
+  SpokeNetworkSubId: "86c1e9d8-ab08-4a11-b32d-a9d2e82695a1"
+  SpokeNetworkResourceGroupName: "rg-$(Location)-network-$(SpokeEnvironmentSuffix)"
+  SpokeNetworkName: "vnet-$(Location)-$(SpokeEnvironmentSuffix)"
+  RunNumber: $(Build.BuildNumber)
+
+jobs:
+- job:
+  steps:
+
+  - task: AzureCLI@2
+    displayName: Az CLI Deploy Spoke Resources
+    name: create_spoke_resource-sqlmi
+    inputs:
+      azureSubscription: $(ServiceConnectionName)
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az account set --subscription $(SpokeNetworkSubId)
+        az deployment sub create --what-if \
+        --location $(Location) \
+        --template-file infra-as-code/bicep/modules/spokeResources/spokeResource-sqlmi.lunavi.bicep \
+        --parameters @deploy/vontas-ctdot-ctrail/spokeResources.parameters.all.json \
+        --parameters parSpokeNetworkName=$(SpokeNetworkName) parSpokeNetworkResourceGroupName=$(SpokeNetworkResourceGroupName) \
+        --parameters parSpokeEnvironmentSuffix=$(SpokeEnvironmentSuffix) \
+        --name create_spoke_resource_sqlmi-$(RunNumber)

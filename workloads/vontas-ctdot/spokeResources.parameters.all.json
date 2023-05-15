@@ -1,0 +1,118 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLocation":{
+      "value": "centralus"
+    },
+    "parSpokeEnvironmentSuffix":{
+      "value": "ctrail-prod"
+    },
+    "parSpokeResources":{
+      "value": {
+        "AzureKeyVault": {
+          "enablekv": true,
+          "skuName": "standard",
+          "resourceGroupName": "rg-centralus-mgmt",
+          "enabledForDeployment": true,
+          "enabledForDiskEncryption": false,
+          "enabledForTemplateDeployment": false,
+          "keysPermissions": [
+            "list"
+          ],
+          "secretsPermissions": [
+            "list"
+          ]
+        },
+        "AzureVirtualDesktop": {
+          "enableAvd": true,
+          "enableProfileStorage": false,
+          "profileStorageAccountName": "sacusprofiles",
+          "profileStorageAccountSku": "Standard_LRS",
+          "hostPoolType": "Pooled",
+          "friendlyName": "CTDOT Management Workspace",
+          "maxSessionLimit": 5,
+          "startVMOnConnect": false,
+          "scalingPlanTz": "Central Standard Time",
+          "resourceGroupName": "rg-centralus-avdmgmt",
+          "hostPoolName": "vdpool-centralus-avdmgmt",
+          "dagName": "vdag-centralus-avdmgmt",
+          "workspaceName": "vdws-centralus-avdmgmt",
+          "enableScalingPlan": true,
+          "scalingPlanName": "vdscaling-centralus-avdmgmt"
+        },
+        "imageGallery": {
+          "deployGallery": true,
+          "galleryName": "igcuslunavilab",
+          "resourceGroupName": "rg-centralus-mgmt",
+          "images": [
+            {
+              "createImage": true,
+              "imageDefinitionName": "image-win11avd",
+              "imageOffer": "Windows-11",
+              "imageSku": "win11-22h2-avd",
+              "hyperVGeneration": "V2",
+              "osState": "Generalized",
+              "osType": "Windows"
+            }
+          ]
+        },
+        "virtualMachines": [
+          {
+            "deployVm": true,
+            "enableBackups": false,
+            "resourceGroupName": "rg-centralus-compute",
+            "subnetName": "snet-centralus-onboard",
+            "networkSecurityGroupName": "nsg-centralus-onboard",
+            "vmName": "CTRPRDOBAPP",
+            "vmSize": "Standard_D4s_v5",
+            "osVersion": "2022-datacenter-azure-edition",
+            "storageAccountType": "StandardSSD_LRS",
+            "enableAcceleratedNetworking": true,
+            "adminUser": "azadminuser",
+            "adminPassword": "P@ssword1234",
+            "securityType": "Standard",
+            "licenseType": "",
+            "dataDisks": []
+          }
+        ],
+        "AzureLoadBalancer": {
+          "enableLoadBalancer": true,
+          "loadBalancerName": "lbi-centralus-onboard",
+          "loadBalancerSku": "Standard",
+          "loadBalancerFrontEndName": "ctrailFrontEndIpConfig",
+          "loadBalancerSubnetName": "snet-centralus-onboard"
+        },
+        "AzureSqlManagedInstance": {
+          "comment": "",
+          "enableSqlMi": true,
+          "managedInstanceName": "ctrcusprdsqlmi",
+          "resourceGroupName": "rg-centralus-sqlmi",
+          "subnetName": "snet-centralus-sqlmi",
+          "routeTableName": "route-centralus-sqlmi",
+          "networkSecurityGroupName": "nsg-centralus-sqlmi",
+          "skuEdition": "GeneralPurpose",
+          "skuName": "GP_Gen5",
+          "adminLogin": "azadminuser",
+          "adminLoginPswd": "P@ssword12345678",
+          "storageSizeInGB": 512,
+          "storageAccountType": "GRS",
+          "vCores": 4,
+          "zoneRedundant": true,
+          "timeZone": "Eastern Standard Time",
+          "licenseType": "LicenseIncluded",
+          "maintenanceConfigurationId": "SQL_CentralUS_MI_2",
+          "managementStorageAccountPrefix": "sactrailcusprd",
+          "managementStorageAccountSku": "Standard_GRS",
+          "clientIPcidr": "70.173.146.219"
+        }
+      }
+    },
+    "parTags": {
+      "value": {
+        "Environment": "Spoke",
+        "DeployedBy": "Lunavi"
+      }
+    }
+  }
+}
