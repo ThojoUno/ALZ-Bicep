@@ -5,14 +5,13 @@
     "parLocation": {
       "value": "westus2"
     },
-    "parCompanyPrefix": {
-      "value": "alz"
+    "parEnvironmentSuffix": {
+      "value": "hub"
     },
-    "parHubNetworkName": {
-      "value": "vnet-westus2-hub"
-    },
-    "parHubNetworkAddressPrefix": {
-      "value": "10.100.0.0/24"
+    "parHubNetworkAddressPrefixes": {
+      "value": [
+        "10.100.0.0/24"
+      ]
     },
     "parSubnets": {
       "value": [
@@ -37,14 +36,14 @@
         {
           "name": "managementSubnet",
           "ipAddressRange": "10.100.0.128/26",
-          "networkSecurityGroupId": "/subscriptions/b460a424-adfe-4d8e-90dd-5da3db14fdca/resourceGroups/rg-westus2-network-hub/providers/Microsoft.Network/networkSecurityGroups/nsg-managementSubnet",
-          "routeTableId": "/subscriptions/b460a424-adfe-4d8e-90dd-5da3db14fdca/resourceGroups/rg-westus2-network-hub/providers/Microsoft.Network/routeTables/route-vnet-westus2-hub"
+          "networkSecurityGroupId": "nsg-managementSubnet",
+          "routeTableId": "route-vnet-westus2-hub"
         },
         {
           "name": "identitySubnet",
           "ipAddressRange": "10.100.0.192/27",
-          "networkSecurityGroupId": "/subscriptions/b460a424-adfe-4d8e-90dd-5da3db14fdca/resourceGroups/rg-westus2-network-hub/providers/Microsoft.Network/networkSecurityGroups/nsg-indentitySubnet",
-          "routeTableId": "/subscriptions/b460a424-adfe-4d8e-90dd-5da3db14fdca/resourceGroups/rg-westus2-network-hub/providers/Microsoft.Network/routeTables/route-vnet-westus2-hub"
+          "networkSecurityGroupId": "nsg-indentitySubnet",
+          "routeTableId": "route-vnet-westus2-hub"
         }
       ]
     },
@@ -63,29 +62,14 @@
     "parAzBastionEnabled": {
       "value": false
     },
-    "parAzBastionName": {
-      "value": "alz-bastion"
-    },
     "parAzBastionSku": {
       "value": "Standard"
-    },
-    "parAzBastionNsgName": {
-      "value": "nsg-AzureBastionSubnet"
     },
     "parDdosEnabled": {
       "value": false
     },
-    "parDdosPlanName": {
-      "value": "alz-ddos-plan"
-    },
     "parAzFirewallEnabled": {
       "value": true
-    },
-    "parAzFirewallName": {
-      "value": "azfw-westus2-hub"
-    },
-    "parAzFirewallPoliciesName": {
-      "value": "azfwpolicy-westus2-hub"
     },
     "parAzFirewallTier": {
       "value": "Standard"
@@ -93,25 +77,17 @@
     "parAzFirewallAvailabilityZones": {
       "value": [
         1,
-        2,
-        3
-    ]
+        2
+      ]
     },
     "parAzErGatewayAvailabilityZones": {
       "value": []
     },
     "parAzVpnGatewayAvailabilityZones": {
-      "value": [
-        1,
-        2,
-        3
-      ]
+      "value": []
     },
     "parAzFirewallDnsProxyEnabled": {
       "value": true
-    },
-    "parHubRouteTableName": {
-      "value": "route-westus2-hub"
     },
     "parDisableBgpRoutePropagation": {
       "value": false
@@ -210,14 +186,11 @@
       }
     },
     "parExpressRouteGatewayConfig": {
-      "value": ""
+      "value": {}
     },
     "parTags": {
       "value": {
-        "Environment": "Lab",
-        "Business Unit": "Cloud Enablement",
-        "Expiry Date": "5/31/2023",
-        "Owner": "Joe Thompson",
+        "Environment": "hub",
         "DeployedBy": "Lunavi"
       }
     },

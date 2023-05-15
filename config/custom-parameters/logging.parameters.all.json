@@ -39,10 +39,7 @@
     },
     "parTags": {
       "value": {
-        "Environment": "Lab",
-        "Business Unit": "Cloud Enablement",
-        "Expiry Date": "5/31/2023",
-        "Owner": "Joe Thompson",
+        "Environment": "Platform-Hub",
         "DeployedBy": "Lunavi"
       }
     },

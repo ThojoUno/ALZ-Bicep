@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "parLocation": {
+      "value": "westus2"
+    },
+    "parEnvironmentSuffix":{
+      "value": "prod"
+    },
+    "parDisableBgpRoutePropagation": {
+      "value": false
+    },
+    "parDdosProtectionPlanId": {
+      "value": ""
+    },
+    "parSpokeNetworkAddressPrefixes": {
+      "value": [
+        "10.100.1.0/24"
+      ]
+    },
+    "parSpokeNetworkName": {
+      "value": "vnet-westus2-prod"
+    },
+    "parSubnets": {
+      "value": [
+        {
+          "name": "snet-web-prod",
+          "ipAddressRange": "10.100.1.0/26",
+          "networkSecurityGroupId": "nsg-snet-web-prod",
+          "addDefaultRoute": true
+        },
+        {
+          "name": "snet-app-prod",
+          "ipAddressRange": "10.100.1.64/26",
+          "networkSecurityGroupId": "nsg-snet-app-prod",
+          "addDefaultRoute": true
+        },
+        {
+          "name": "snet-data-prod",
+          "ipAddressRange": "10.100.1.128/26",
+          "networkSecurityGroupId": "nsg-snet-data-prod",
+          "addDefaultRoute": true
+        }
+      ]
+    },
+    "parDnsServerIps": {
+      "value": []
+    },
+    "parNextHopIpAddress": {
+      "value": "10.100.0.68"
+    },
+    "parSpokeToHubRouteTableName": {
+      "value": "route-vnet-westus2-prod"
+    },
+    "parTags": {
+      "value": {
+        "Environment": "Live"
+      }
+    },
+    "parTelemetryOptOut": {
+      "value": false
+    }
+  }
+}
